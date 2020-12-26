@@ -1,37 +1,72 @@
 package pl.edu.pjatk.simulator.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import pl.edu.pjatk.simulator.service.Identifiable;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Entity
+@Table(name = "compartments")
 public class Compartment implements Identifiable {
-    private final int id;
-    private final int capacity;
-    private final List<Person> occupants;
 
-    public Compartment(int id, int capacity) {
-        this.id = id;
-        this.capacity = capacity;
-        occupants = new ArrayList<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "train_id")
+    private Train train;
+
+    private int capacity;
+
+    @OneToMany(mappedBy = "compartment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Person> occupants;
+
+    public Compartment() {
+
     }
 
-    public long getId() {
+    @Override
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Train getTrain() {
+        return train;
+    }
+
+    public void setTrain(Train train) {
+        this.train = train;
     }
 
     public int getCapacity() {
         return capacity;
     }
 
-    public Collection<Person> getOccupants() {
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public List<Person> getOccupants() {
         return occupants;
+    }
+
+    public void setOccupants(List<Person> occupants) {
+        this.occupants = occupants;
     }
 
     public void embark(Person person) {
         if (occupants.size() < capacity) {
+            person.setCompartment(this);
             occupants.add(person);
         }
     }

@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.edu.pjatk.simulator.model.Train;
-import pl.edu.pjatk.simulator.service.SkmService;
+import pl.edu.pjatk.simulator.service.TrainService;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -19,15 +18,16 @@ import java.util.Map;
 public class SkmController {
 
     @Autowired
-    SkmService skmService;
+    TrainService trainService;
 
     @GetMapping()
     @RequestMapping("/go")
     public ResponseEntity<List<Map<String, Object>>> moveTime() {
         try {
-            skmService.moveTimeForward();
+            trainService.moveTimeForward();
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -1,0 +1,120 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2020_12_20-initial-tables
+      author: tymoteusz.urbanowicz
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: trains, compartments
+      changes:
+        - createTable:
+            tableName: trains
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: train_id_pkey
+              - column:
+                  name: current_station
+                  type: enum('GDYNIA_GLOWNA',
+                    'GDYNIA_SW_MAKSYMILIANA',
+                    'GDYNIA_REDLOWO',
+                    'GDYNIA_ORLOWO',
+                    'SOPOT_KAMIENNY_POTOK',
+                    'SOPOT',
+                    'SOPOT_WYSCIGI',
+                    'GDANSK_ZABIANKA',
+                    'GDANSK_OLIWA',
+                    'GDANSK_PRZYMORZE',
+                    'GDANSK_ZASPA',
+                    'GDANSK_WRZESZCZ',
+                    'GDANSK_POLITECHNIKA',
+                    'GDANSK_STOCZNIA',
+                    'GDANSK_GLOWNY')
+                  constraints:
+                    nullable: false
+              - column:
+                  name: going_to_gdansk
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: current_pause_time
+                  type: INT
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: compartments
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: compartment_id_pkey
+              - column:
+                  name: train_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: compartment_train_id_fkey
+                    references: trains(id)
+              - column:
+                  name: capacity
+                  type: INT
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: occupants
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: occupant_id_pkey
+              - column:
+                  name: compartment_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: occupant_compartment_id_fkey
+                    references: compartments(id)
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: destination
+                  type: enum('GDYNIA_GLOWNA',
+                    'GDYNIA_SW_MAKSYMILIANA',
+                    'GDYNIA_REDLOWO',
+                    'GDYNIA_ORLOWO',
+                    'SOPOT_KAMIENNY_POTOK',
+                    'SOPOT',
+                    'SOPOT_WYSCIGI',
+                    'GDANSK_ZABIANKA',
+                    'GDANSK_OLIWA',
+                    'GDANSK_PRZYMORZE',
+                    'GDANSK_ZASPA',
+                    'GDANSK_WRZESZCZ',
+                    'GDANSK_POLITECHNIKA',
+                    'GDANSK_STOCZNIA',
+                    'GDANSK_GLOWNY')
+                  constraints:
+                    nullable: false

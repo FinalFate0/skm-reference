@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2020_12_20-insert-initial-data-trains
+      author: tymoteusz.urbanowicz
+      changes:
+        - insert:
+            tableName: trains
+            columns:
+              - column:
+                  name: current_station
+                  value: 'GDANSK_GLOWNY'
+              - column:
+                  name: going_to_gdansk
+                  valueBoolean: "false"
+              - column:
+                  name: current_pause_time
+                  value: "2"
+        - insert:
+            tableName: trains
+            columns:
+              - column:
+                  name: current_station
+                  value: 'GDYNIA_GLOWNA'
+              - column:
+                  name: going_to_gdansk
+                  valueBoolean: "true"
+              - column:
+                  name: current_pause_time
+                  value: "2"

@@ -5,3 +5,15 @@ services:
     ports:
       - "11111:11111"
     restart: on-failure:5
+    depends_on:
+      - traindb
+  traindb:
+    build: ./db
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: trainsimulator
+      MYSQL_USER: skm
+      MYSQL_PASSWORD: admin

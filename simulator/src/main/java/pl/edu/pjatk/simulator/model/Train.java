@@ -3,38 +3,74 @@ package pl.edu.pjatk.simulator.model;
 import pl.edu.pjatk.simulator.service.Identifiable;
 import pl.edu.pjatk.simulator.util.PersonGenerator;
 
-import java.util.Collection;
+import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
+@Entity
+@Table(name = "trains")
 public class Train implements Identifiable {
-    private final int id;
-    private final List<Compartment> compartments;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Compartment> compartments;
+
+    @Column(name = "current_station", columnDefinition = "enum('DUMMY')")
+    @Enumerated(EnumType.STRING)
     private Station currentStation;
+
+    @Column(name = "going_to_gdansk")
     private boolean goingToGdansk;
+
+    @Column(name = "current_pause_time")
     private int currentPauseTime;
 
-    public Train(int id, List<Compartment> compartments, Station currentStation, boolean goingToGdansk) {
-        this.id = id;
-        this.compartments = compartments;
-        this.currentStation = currentStation;
-        this.goingToGdansk = goingToGdansk;
-        this.currentPauseTime = 0;
+    public Train() {
+
     }
 
-    public Collection<Compartment> getCompartments() {
+    public Set<Compartment> getCompartments() {
         return compartments;
+    }
+
+    public void setCompartments(Set<Compartment> compartments) {
+        this.compartments = compartments;
     }
 
     public Station getCurrentStation() {
         return currentStation;
     }
 
+    public void setCurrentStation(Station currentStation) {
+        this.currentStation = currentStation;
+    }
+
     public boolean isGoingToGdansk() {
         return goingToGdansk;
     }
 
+    public void setGoingToGdansk(boolean goingToGdansk) {
+        this.goingToGdansk = goingToGdansk;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public int getCurrentPauseTime() {
         return currentPauseTime;
+    }
+
+    public void setCurrentPauseTime(int currentPauseTime) {
+        this.currentPauseTime = currentPauseTime;
     }
 
     public void move() {
@@ -55,10 +91,5 @@ public class Train implements Identifiable {
                 people.forEach(c::embark);
             });
         }
-    }
-
-    @Override
-    public long getId() {
-        return id;
     }
 }
