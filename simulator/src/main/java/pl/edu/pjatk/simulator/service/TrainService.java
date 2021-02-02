@@ -2,6 +2,7 @@ package pl.edu.pjatk.simulator.service;
 
 import org.springframework.stereotype.Service;
 import pl.edu.pjatk.simulator.model.Compartment;
+import pl.edu.pjatk.simulator.model.Station;
 import pl.edu.pjatk.simulator.model.Train;
 import pl.edu.pjatk.simulator.repository.CompartmentRepository;
 import pl.edu.pjatk.simulator.repository.TrainRepository;
@@ -30,12 +31,17 @@ public class TrainService extends CrudService<Train>{
     @Override
     public Train createOrUpdate(Train updateEntity) {
         if (updateEntity.getId() == null) {
+
+            updateEntity.setCurrentStation(Station.GDANSK_GLOWNY);
+
             var compartments = updateEntity.getCompartments();
             updateEntity.setCompartments(Collections.emptySet());
-            Train insertedTrain = repository.save(updateEntity);
 
-            compartments.forEach(compartment -> compartment.setTrain(insertedTrain));
-            compartmentRepository.saveAll(compartments);
+            Train insertedTrain = repository.save(updateEntity);
+            if(!updateEntity.getCompartments().isEmpty()) {
+                compartments.forEach(compartment -> compartment.setTrain(insertedTrain));
+                compartmentRepository.saveAll(compartments);
+            }
 
             return insertedTrain;
         }
@@ -45,14 +51,16 @@ public class TrainService extends CrudService<Train>{
         if (trainInDb.isPresent()) {
             var dbEntity = trainInDb.get();
 
-            dbEntity.setCurrentStation(fallbackIfNull(updateEntity.getCurrentStation(), dbEntity.getCurrentStation()));
             dbEntity.setCurrentPauseTime(fallbackIfNull(updateEntity.getCurrentPauseTime(), dbEntity.getCurrentPauseTime()));
             dbEntity.setGoingToGdansk(fallbackIfNull(updateEntity.isGoingToGdansk(), dbEntity.isGoingToGdansk()));
-            var insertedTrain = repository.save(dbEntity);
 
-            Set<Compartment> compartments = updateEntity.getCompartments();
-            compartments.forEach(compartment -> compartment.setTrain(dbEntity));
-            compartmentRepository.saveAll(compartments);
+            if(updateEntity.getCompartments() != null) {
+                Set<Compartment> compartments = updateEntity.getCompartments();
+                compartments.forEach(compartment -> compartment.setTrain(dbEntity));
+                compartmentRepository.saveAll(compartments);
+            }
+
+            var insertedTrain = repository.save(dbEntity);
 
             return insertedTrain;
         } else {

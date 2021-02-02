@@ -25,7 +25,7 @@ public class SkmController {
     public ResponseEntity<List<Map<String, Object>>> moveTime() {
         try {
             trainService.moveTimeForward();
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

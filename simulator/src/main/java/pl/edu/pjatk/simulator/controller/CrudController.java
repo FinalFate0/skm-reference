@@ -30,6 +30,7 @@ public abstract class CrudController<T extends Identifiable> {
 
             return new ResponseEntity<>(payload, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -42,6 +43,7 @@ public abstract class CrudController<T extends Identifiable> {
 
             return new ResponseEntity<>(payload, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -61,6 +63,7 @@ public abstract class CrudController<T extends Identifiable> {
     public ResponseEntity<Void> add(@RequestBody T t) {
         try {
             service.createOrUpdate(t);
+
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,6 +77,7 @@ public abstract class CrudController<T extends Identifiable> {
             service.delete(id);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

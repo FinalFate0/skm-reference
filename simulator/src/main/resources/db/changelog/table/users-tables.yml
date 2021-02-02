@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2021-01-30-users-tables
+      author: tymoteusz.urbanowicz
+      changes:
+        - createTable:
+            - tableName: users
+            - column:
+                name: id
+                type: int
+                autoIncrement: true
+                constraints:
+                  nullable: false
+                  primaryKey: true
+                  primaryKeyName: pk_user
+            - column:
+                name: username
+                type: varchar(64)
+                constraints:
+                  nullable: false
+            - column:
+                name: password
+                type: varchar(128)
+                constraints:
+                  nullable: false
+            - column:
+                name: authorities
+                type: varchar(64)
